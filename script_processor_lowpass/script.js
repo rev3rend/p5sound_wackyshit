@@ -34,8 +34,8 @@ function setup()
 function draw()
 {
 
-	   	global_amp = constrain(map(mouseY, 0, height, 1., 0.), 0., 1.);
-	   	global_smooth = constrain(map(mouseX, 0, width, 1., 0.), 0., 1.);
+  global_amp = constrain(map(mouseY, 0, height, 1., 0.), 0., 1.);
+  global_smooth = constrain(map(mouseX, 0, width, 1., 0.), 0., 1.);
 
 }
 
@@ -45,12 +45,6 @@ function doit(e)
 {
 
 	var ob = e.outputBuffer;
-
-	var local_amp = global_amp; // copy for efficiency
-	var local_smooth = global_smooth;
-	var local_iamp; // use for efficiency
-	var local_ismooth;
-	var local_avg;
 
 	// STEP 1: fill it with noise
  	for (var channel = 0; channel < ob.numberOfChannels; channel++) {
@@ -63,9 +57,12 @@ function doit(e)
   }
 
 	// STEP 2: filter the noise (MOUSEX)
+  var local_smooth = global_smooth; // copy from global struct for efficiency
+  var local_ismooth, local_avg; // local use for efficiency
+
   for (var channel = 0; channel < ob.numberOfChannels; channel++) {
   var out = ob.getChannelData(channel);
-	local_ismooth = global_ismooth; // copy over
+	local_ismooth = global_ismooth; // copy over per channel
  
     // Loop through the 4096 samples
     for (var sample = 0; sample < ob.length; sample++) {
@@ -85,12 +82,18 @@ function doit(e)
 
   }
 
+  global_ismooth = local_ismooth; // copy over smoothed variable
+
 
   // STEP 3: amplitude (MOUSEY)
 	// Loop through the output channels (in this case there is only one)
+
+  var local_amp = global_amp; // copy from global struct for efficiency
+  var local_iamp; // local use for efficiency
+
   for (var channel = 0; channel < ob.numberOfChannels; channel++) {
   var out = ob.getChannelData(channel);
-	local_iamp = global_iamp; // copy over
+	local_iamp = global_iamp; // copy over per channel
  
     // Loop through the 4096 samples
     for (var sample = 0; sample < ob.length; sample++) {
@@ -102,9 +105,8 @@ function doit(e)
 
   }
 
-  // copy over smoothed variables
-  global_iamp = local_iamp;
-  global_ismooth = local_ismooth;
+  global_iamp = local_iamp; // copy over smoothed variable
+
 }
 
 
