@@ -10,13 +10,13 @@ var global_iamp; // interpolated amplitude based on script processor
 var global_smooth;
 var global_ismooth;
 
-var saved_amp = new Array(2);
+var saved_amp = new Array(2); // stereo for IIR
 
 function setup() 
 {
 	createCanvas(800, 600);
 	background(255, 0, 0);
-	console.log("fuck you");
+	console.log("testing...");
 
 	global_amp = 0.;
 	global_iamp = 0.;
@@ -38,7 +38,6 @@ function draw()
   global_smooth = constrain(map(mouseX, 0, width, 1., 0.), 0., 1.);
 
 }
-
 
 
 function doit(e)
