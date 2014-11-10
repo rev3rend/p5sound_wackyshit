@@ -54,33 +54,33 @@ function doit(e)
 
 	// STEP 1: fill it with noise
  	for (var channel = 0; channel < ob.numberOfChannels; channel++) {
- 	   var out = ob.getChannelData(channel);
-
- 	   for (var sample = 0; sample < ob.length; sample++) {
- 	     	out[sample] = ((Math.random() * 2) - 1);         
- 	   }
-
-  	}
-
-  	// STEP 2: filter the noise (MOUSEX)
-  for (var channel = 0; channel < ob.numberOfChannels; channel++) {
     var out = ob.getChannelData(channel);
+
+    for (var sample = 0; sample < ob.length; sample++) {
+     	out[sample] = ((Math.random() * 2) - 1);         
+    }
+
+  }
+
+	// STEP 2: filter the noise (MOUSEX)
+  for (var channel = 0; channel < ob.numberOfChannels; channel++) {
+  var out = ob.getChannelData(channel);
 	local_ismooth = global_ismooth; // copy over
  
     // Loop through the 4096 samples
     for (var sample = 0; sample < ob.length; sample++) {
 
-    	local_ismooth = 0.99*local_ismooth + 0.01*local_smooth; // interpolate amplitude
+    local_ismooth = 0.99*local_ismooth + 0.01*local_smooth; // interpolate amplitude
 
-    	if(sample==0) {
-    		local_avg = (1.0-local_ismooth)*out[sample] + (local_ismooth)*saved_amp[channel];
-    	}
-    	else {
-    		local_avg = (1.0-local_ismooth)*out[sample] + (local_ismooth)*out[sample-1];
-    	}
+    if(sample==0) {
+      local_avg = (1.0-local_ismooth)*out[sample] + (local_ismooth)*saved_amp[channel];
+    }
+    else {
+      local_avg = (1.0-local_ismooth)*out[sample] + (local_ismooth)*out[sample-1];
+    }
 
-    	if(sample==ob.length-1) saved_amp[channel] = out[sample];
-    	out[sample] = local_avg; 
+    if(sample==ob.length-1) saved_amp[channel] = out[sample];
+      out[sample] = local_avg; 
     }
 
   }
@@ -89,15 +89,15 @@ function doit(e)
   // STEP 3: amplitude (MOUSEY)
 	// Loop through the output channels (in this case there is only one)
   for (var channel = 0; channel < ob.numberOfChannels; channel++) {
-    var out = ob.getChannelData(channel);
+  var out = ob.getChannelData(channel);
 	local_iamp = global_iamp; // copy over
  
     // Loop through the 4096 samples
     for (var sample = 0; sample < ob.length; sample++) {
 
-    	local_iamp = 0.99*local_iamp + 0.01*local_amp; // interpolate amplitude
- 
-       	out[sample] = local_iamp*out[sample];          
+      local_iamp = 0.99*local_iamp + 0.01*local_amp; // interpolate amplitude
+
+      out[sample] = local_iamp*out[sample];          
     }
 
   }
